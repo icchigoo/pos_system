@@ -4,12 +4,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
-import { AuthConsumer } from 'src/contexts/auth-context';
+import { AuthConsumer, AuthProvider } from 'src/contexts/auth-context';
 import { useNProgress } from 'src/hooks/use-nprogress';
 import { createTheme } from 'src/theme';
 import { createEmotionCache } from 'src/utils/create-emotion-cache';
 import 'simplebar-react/dist/simplebar.min.css';
-import { AuthProvider } from 'src/context/authContext';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -37,7 +36,6 @@ const App = (props) => {
       </Head>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <AuthProvider>
-          <AuthProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <AuthConsumer>
@@ -48,7 +46,6 @@ const App = (props) => {
               }
             </AuthConsumer>
           </ThemeProvider>
-          </AuthProvider>
         </AuthProvider>
       </LocalizationProvider>
     </CacheProvider>
