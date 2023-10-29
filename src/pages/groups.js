@@ -1,5 +1,5 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import Head from 'next/head';
+import React, { useCallback, useState, useEffect } from "react";
+import Head from "next/head";
 import {
   Box,
   Button,
@@ -20,41 +20,42 @@ import {
   DialogActions,
   TextField,
   IconButton,
-} from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-
-import DeleteIcon from '@mui/icons-material/Delete';
-import CloseIcon from '@mui/icons-material/Close';
-import { useGroupContext } from 'src/contexts/group-context';
-import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import { applyPagination } from 'src/utils/apply-pagination';
+  MenuItem, // Add MenuItem for the dropdown
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CloseIcon from "@mui/icons-material/Close";
+import { useGroupContext } from "src/contexts/group-context";
+import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
+import { applyPagination } from "src/utils/apply-pagination";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
-import TableSortLabel from '@mui/material/TableSortLabel';
+import TableSortLabel from "@mui/material/TableSortLabel";
 
 const Page = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [groups, setGroups] = useState([]);
   const groupContext = useGroupContext();
-  const [orderBy, setOrderBy] = useState('status');
-  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState("status");
+  const [order, setOrder] = useState("asc");
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
-  const [newGroupName, setNewGroupName] = useState('');
-  const [newGroupDescription, setNewGroupDescription] = useState('');
-  const [editGroupName, setEditGroupName] = useState('');
-  const [editGroupDescription, setEditGroupDescription] = useState('');
+  const [newGroupName, setNewGroupName] = useState("");
+  const [newGroupDescription, setNewGroupDescription] = useState("");
+  const [editGroupName, setEditGroupName] = useState("");
+  const [editGroupDescription, setEditGroupDescription] = useState("");
+  const [editGroupStatus, setEditGroupStatus] = useState(""); // Status state
 
   const fetchGroups = async () => {
     try {
       const groupsData = await groupContext.fetchGroups();
       setGroups(groupsData);
     } catch (error) {
-      console.error('Error fetching groups: ', error);
+      console.error("Error fetching groups: ", error);
     }
   };
 
@@ -71,8 +72,8 @@ const Page = () => {
   }, []);
 
   const handleSort = (property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
 
     const sortedGroups = [...groups].sort((a, b) => {
@@ -92,6 +93,7 @@ const Page = () => {
     setSelectedGroup(group);
     setEditGroupName(group.group_name);
     setEditGroupDescription(group.group_desc);
+    setEditGroupStatus(group.status); // Set status for editing
     setIsEditDialogOpen(true);
   };
 
@@ -102,8 +104,8 @@ const Page = () => {
 
   const handleAddDialogClose = () => {
     setIsAddDialogOpen(false);
-    setNewGroupName('');
-    setNewGroupDescription('');
+    setNewGroupName("");
+    setNewGroupDescription("");
   };
 
   const handleEditDialogClose = () => {
@@ -124,11 +126,11 @@ const Page = () => {
       };
       await groupContext.createGroup(groupData);
       setIsAddDialogOpen(false);
-      setNewGroupName('');
-      setNewGroupDescription('');
+      setNewGroupName("");
+      setNewGroupDescription("");
       fetchGroups();
     } catch (error) {
-      console.error('Error creating group: ', error);
+      console.error("Error creating group: ", error);
     }
   };
 
@@ -138,13 +140,14 @@ const Page = () => {
         const updatedGroupData = {
           group_name: editGroupName,
           group_desc: editGroupDescription,
+          status: editGroupStatus, // Include status in the update
         };
         await groupContext.editGroup(selectedGroup.group_id, updatedGroupData);
         setIsEditDialogOpen(false);
         setSelectedGroup(null);
         fetchGroups();
       } catch (error) {
-        console.error('Error editing group: ', error);
+        console.error("Error editing group: ", error);
       }
     }
   };
@@ -157,7 +160,7 @@ const Page = () => {
         setSelectedGroup(null);
         fetchGroups();
       } catch (error) {
-        console.error('Error deleting group: ', error);
+        console.error("Error deleting group: ", error);
       }
     }
   };
@@ -203,9 +206,9 @@ const Page = () => {
                     <TableCell>Description</TableCell>
                     <TableCell>
                       <TableSortLabel
-                        active={orderBy === 'status'}
-                        direction={orderBy === 'status' ? order : 'asc'}
-                        onClick={() => handleSort('status')}
+                        active={orderBy === "status"}
+                        direction={orderBy === "status" ? order : "asc"}
+                        onClick={() => handleSort("status")}
                       >
                         Status
                       </TableSortLabel>
@@ -236,35 +239,30 @@ const Page = () => {
         </Container>
       </Box>
 
-      <Dialog
-        open={isAddDialogOpen}
-        onClose={handleAddDialogClose}
-        fullWidth
-      >
+      <Dialog open={isAddDialogOpen} onClose={handleAddDialogClose} fullWidth>
         <DialogTitle>
           Create Group
-          <IconButton
-            edge="end"
-            color="inherit"
-            onClick={handleAddDialogClose}
-            aria-label="close"
-          >
+          <IconButton edge="end" color="inherit" onClick={handleAddDialogClose} aria-label="close">
             <CloseIcon />
           </IconButton>
         </DialogTitle>
         <DialogContent>
-          <TextField
-            label="Group Name"
-            fullWidth
-            value={newGroupName}
-            onChange={(e) => setNewGroupName(e.target.value)}
-          />
-          <TextField
-            label="Description"
-            fullWidth
-            value={newGroupDescription}
-            onChange={(e) => setNewGroupDescription(e.target.value)}
-          />
+          <Box mb={2}>
+            <TextField
+              label="Group Name"
+              fullWidth
+              value={newGroupName}
+              onChange={(e) => setNewGroupName(e.target.value)}
+            />
+          </Box>
+          <Box mb={2}>
+            <TextField
+              label="Description"
+              fullWidth
+              value={newGroupDescription}
+              onChange={(e) => setNewGroupDescription(e.target.value)}
+            />
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleAddDialogClose}>Cancel</Button>
@@ -272,35 +270,40 @@ const Page = () => {
         </DialogActions>
       </Dialog>
 
-      <Dialog
-        open={isEditDialogOpen}
-        onClose={handleEditDialogClose}
-        fullWidth
-      >
+      <Dialog open={isEditDialogOpen} onClose={handleEditDialogClose} fullWidth>
         <DialogTitle>
           Edit Group
-          <IconButton
-            edge="end"
-            color="inherit"
-            onClick={handleEditDialogClose}
-            aria-label="close"
-          >
+          <IconButton edge="end" color="inherit" onClick={handleEditDialogClose} aria-label="close">
             <CloseIcon />
           </IconButton>
         </DialogTitle>
         <DialogContent>
+          <Box mb={2}>
+            <TextField
+              label="Group Name"
+              fullWidth
+              value={editGroupName}
+              onChange={(e) => setEditGroupName(e.target.value)}
+            />
+          </Box>
+          <Box mb={2}>
+            <TextField
+              label="Description"
+              fullWidth
+              value={editGroupDescription}
+              onChange={(e) => setEditGroupDescription(e.target.value)}
+            />
+          </Box>
           <TextField
-            label="Group Name"
+            select
+            label="Status"
             fullWidth
-            value={editGroupName}
-            onChange={(e) => setEditGroupName(e.target.value)}
-          />
-          <TextField
-            label="Description"
-            fullWidth
-            value={editGroupDescription}
-            onChange={(e) => setEditGroupDescription(e.target.value)}
-          />
+            value={editGroupStatus}
+            onChange={(e) => setEditGroupStatus(e.target.value)}
+          >
+            <MenuItem value="active">Active</MenuItem>
+            <MenuItem value="inactive">Inactive</MenuItem>
+          </TextField>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleEditDialogClose}>Cancel</Button>
@@ -308,11 +311,7 @@ const Page = () => {
         </DialogActions>
       </Dialog>
 
-      <Dialog
-        open={deleteConfirmation}
-        onClose={handleDeleteDialogClose}
-        fullWidth
-      >
+      <Dialog open={deleteConfirmation} onClose={handleDeleteDialogClose} fullWidth>
         <DialogTitle>
           Confirm Delete
           <IconButton
@@ -324,9 +323,7 @@ const Page = () => {
             <CloseIcon />
           </IconButton>
         </DialogTitle>
-        <DialogContent>
-          Are you sure you want to delete this group?
-        </DialogContent>
+        <DialogContent>Are you sure you want to delete this group?</DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteGroup}>Delete</Button>
         </DialogActions>
