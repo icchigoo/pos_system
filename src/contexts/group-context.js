@@ -34,7 +34,7 @@ export const GroupProvider = ({ children }) => {
 
   const deleteGroup = async (groupId) => {
     try {
-      const response = await authenticatedAxios.delete(`${base_url}group/delete/${groupId}`, {
+      const response = await authenticatedAxios.delete(`${base_url}group/${groupId}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -47,7 +47,7 @@ export const GroupProvider = ({ children }) => {
 
   const editGroup = async (groupId, updatedGroupData) => {
     try {
-      const response = await authenticatedAxios.put(`${base_url}group/edit/${groupId}`, updatedGroupData, {
+      const response = await authenticatedAxios.put(`${base_url}group/${groupId}`, updatedGroupData, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
