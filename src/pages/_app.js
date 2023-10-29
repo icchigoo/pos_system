@@ -9,6 +9,7 @@ import { useNProgress } from 'src/hooks/use-nprogress';
 import { createTheme } from 'src/theme';
 import { createEmotionCache } from 'src/utils/create-emotion-cache';
 import 'simplebar-react/dist/simplebar.min.css';
+import { GroupProvider } from 'src/contexts/group-context';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -36,6 +37,7 @@ const App = (props) => {
       </Head>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <AuthProvider>
+          <GroupProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <AuthConsumer>
@@ -45,7 +47,9 @@ const App = (props) => {
                   : getLayout(<Component {...pageProps} />)
               }
             </AuthConsumer>
+            
           </ThemeProvider>
+          </GroupProvider>
         </AuthProvider>
       </LocalizationProvider>
     </CacheProvider>

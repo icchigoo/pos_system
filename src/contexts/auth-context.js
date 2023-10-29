@@ -1,18 +1,18 @@
-import { createContext, useContext, useEffect, useReducer, useRef } from 'react';
-import PropTypes from 'prop-types';
-import axios from 'axios'; // Import axios for making HTTP requests
-import { base_url } from 'src/utils/baseUrl';
+import { createContext, useContext, useEffect, useReducer, useRef } from "react";
+import PropTypes from "prop-types";
+import axios from "axios"; // Import axios for making HTTP requests
+import { base_url } from "src/utils/baseUrl";
 
 const HANDLERS = {
-  INITIALIZE: 'INITIALIZE',
-  SIGN_IN: 'SIGN_IN',
-  SIGN_OUT: 'SIGN_OUT'
+  INITIALIZE: "INITIALIZE",
+  SIGN_IN: "SIGN_IN",
+  SIGN_OUT: "SIGN_OUT",
 };
 
 const initialState = {
   isAuthenticated: false,
   isLoading: true,
-  user: null
+  user: null,
 };
 
 const handlers = {
@@ -21,18 +21,16 @@ const handlers = {
 
     return {
       ...state,
-      ...(
-        // if payload (user) is provided, then is authenticated
-        user
-          ? ({
+      ...// if payload (user) is provided, then is authenticated
+      (user
+        ? {
             isAuthenticated: true,
             isLoading: false,
-            user
-          })
-          : ({
-            isLoading: false
-          })
-      )
+            user,
+          }
+        : {
+            isLoading: false,
+          }),
     };
   },
   [HANDLERS.SIGN_IN]: (state, action) => {
@@ -41,21 +39,20 @@ const handlers = {
     return {
       ...state,
       isAuthenticated: true,
-      user
+      user,
     };
   },
   [HANDLERS.SIGN_OUT]: (state) => {
     return {
       ...state,
       isAuthenticated: false,
-      user: null
+      user: null,
     };
-  }
+  },
 };
 
-const reducer = (state, action) => (
-  handlers[action.type] ? handlers[action.type](state, action) : state
-);
+const reducer = (state, action) =>
+  handlers[action.type] ? handlers[action.type](state, action) : state;
 
 export const AuthContext = createContext({ undefined });
 
@@ -75,26 +72,26 @@ export const AuthProvider = (props) => {
     let isAuthenticated = false;
 
     try {
-      isAuthenticated = window.sessionStorage.getItem('authenticated') === 'true';
+      isAuthenticated = window.sessionStorage.getItem("authenticated") === "true";
     } catch (err) {
       console.error(err);
     }
 
     if (isAuthenticated) {
       const user = {
-        id: '5e86809283e28b96d2d38537',
-        avatar: '/assets/avatars/avatar-anika-visser.png',
-        name: 'Anika Visser',
-        email: 'anika.visser@devias.io'
+        id: "5e86809283e28b96d2d38537",
+        avatar: "/assets/avatars/avatar-anika-visser.png",
+        name: "Anika Visser",
+        email: "anika.visser@devias.io",
       };
 
       dispatch({
         type: HANDLERS.INITIALIZE,
-        payload: user
+        payload: user,
       });
     } else {
       dispatch({
-        type: HANDLERS.INITIALIZE
+        type: HANDLERS.INITIALIZE,
       });
     }
   };
@@ -109,51 +106,55 @@ export const AuthProvider = (props) => {
 
   const skip = () => {
     try {
-      window.sessionStorage.setItem('authenticated', 'true');
+      window.sessionStorage.setItem("authenticated", "true");
     } catch (err) {
       console.error(err);
     }
 
     const user = {
-      id: '5e86809283e28b96d2d38537',
-      avatar: '/assets/avatars/avatar-anika-visser.png',
-      name: 'Anika Visser',
-      email: 'anika.visser@devias.io'
+      id: "5e86809283e28b96d2d38537",
+      avatar: "/assets/avatars/avatar-anika-visser.png",
+      name: "Anika Visser",
+      email: "anika.visser@devias.io",
     };
 
     dispatch({
       type: HANDLERS.SIGN_IN,
-      payload: user
+      payload: user,
     });
   };
 
   const signIn = async (email, password) => {
-    // Make an API call to your server for user login
     try {
       const response = await axios.post(`${base_url}user/login`, {
         email: email,
         password: password,
       });
-
-      // Handle the response from the server
-      const user = response.data.user; // Assuming the server returns user data
-
-      // Save user authentication state in session storage
+  
+      const user = response.data.user;
+      const token = response.data.token;
+  
       try {
-        window.sessionStorage.setItem('authenticated', 'true');
+        window.sessionStorage.setItem("token", token);
+        window.sessionStorage.setItem("authenticated", "true");
       } catch (err) {
         console.error(err);
       }
-
+  
       dispatch({
         type: HANDLERS.SIGN_IN,
-        payload: user
+        payload: user,
       });
+  
+      // Use the authenticatedAxios instance to make authenticated requests
+      const authenticatedResponse = await authenticatedAxios.get(`${base_url}some/protected/endpoint`);
+      console.log("Authenticated request response:", authenticatedResponse);
     } catch (error) {
-      // Handle login error, e.g., display an error message
-      console.error('Login failed:', error);
+      console.error("Login failed:", error);
     }
   };
+  
+  
 
   const signUp = async (firstname, lastname, email, mobile, password) => {
     try {
@@ -165,42 +166,41 @@ export const AuthProvider = (props) => {
         mobile: mobile,
         password: password,
       });
-  
+
       // Handle the response from the server
       if (response.data.message === "User created successfully") {
         // User registration was successful
         // You can add any additional logic here if needed
         // Save user authentication state in session storage
         try {
-          window.sessionStorage.setItem('authenticated', 'true');
+          window.sessionStorage.setItem("authenticated", "true");
         } catch (err) {
           console.error(err);
         }
-  
+
         // Dispatch the user data to the state
         const user = {
           id: response.data.userId, // Modify this based on your API response
           // Other user data from the API response
         };
-  
+
         dispatch({
           type: HANDLERS.SIGN_IN,
-          payload: user
+          payload: user,
         });
       } else {
         // Handle registration error, e.g., display an error message
-        console.error('Registration failed:', response.data.message);
+        console.error("Registration failed:", response.data.message);
       }
     } catch (error) {
       // Handle network error or other issues with the registration API
-      console.error('Registration failed:', error);
+      console.error("Registration failed:", error);
     }
   };
-  
 
   const signOut = () => {
     dispatch({
-      type: HANDLERS.SIGN_OUT
+      type: HANDLERS.SIGN_OUT,
     });
   };
 
@@ -211,7 +211,7 @@ export const AuthProvider = (props) => {
         skip,
         signIn,
         signUp,
-        signOut
+        signOut,
       }}
     >
       {children}
@@ -220,7 +220,7 @@ export const AuthProvider = (props) => {
 };
 
 AuthProvider.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 export const AuthConsumer = AuthContext.Consumer;

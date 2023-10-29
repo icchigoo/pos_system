@@ -46,6 +46,15 @@ export const items = [
     )
   },
   {
+    title: 'Groups',
+    path: '/groups',
+    icon: (
+      <SvgIcon fontSize="small">
+        <UserIcon />
+      </SvgIcon>
+    )
+  },
+  {
     title: 'Settings',
     path: '/settings',
     icon: (
@@ -72,6 +81,7 @@ export const items = [
       </SvgIcon>
     )
   },
+
   // {
   //   title: 'Error',
   //   path: '/404',
