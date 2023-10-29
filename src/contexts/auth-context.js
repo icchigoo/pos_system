@@ -155,9 +155,48 @@ export const AuthProvider = (props) => {
     }
   };
 
-  const signUp = async (email, name, password) => {
-    throw new Error('Sign up is not implemented');
+  const signUp = async (firstname, lastname, email, mobile, password) => {
+    try {
+      // Make an API call to register a new user
+      const response = await axios.post(`${base_url}user/register`, {
+        firstname: firstname,
+        lastname: lastname,
+        email: email,
+        mobile: mobile,
+        password: password,
+      });
+  
+      // Handle the response from the server
+      if (response.data.message === "User created successfully") {
+        // User registration was successful
+        // You can add any additional logic here if needed
+        // Save user authentication state in session storage
+        try {
+          window.sessionStorage.setItem('authenticated', 'true');
+        } catch (err) {
+          console.error(err);
+        }
+  
+        // Dispatch the user data to the state
+        const user = {
+          id: response.data.userId, // Modify this based on your API response
+          // Other user data from the API response
+        };
+  
+        dispatch({
+          type: HANDLERS.SIGN_IN,
+          payload: user
+        });
+      } else {
+        // Handle registration error, e.g., display an error message
+        console.error('Registration failed:', response.data.message);
+      }
+    } catch (error) {
+      // Handle network error or other issues with the registration API
+      console.error('Registration failed:', error);
+    }
   };
+  
 
   const signOut = () => {
     dispatch({
