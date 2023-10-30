@@ -11,6 +11,8 @@ import { createEmotionCache } from 'src/utils/create-emotion-cache';
 import 'simplebar-react/dist/simplebar.min.css';
 import { GroupProvider } from 'src/contexts/group-context';
 import { CategoryProvider } from 'src/contexts/category-context';
+import { OpeningStockProvider } from 'src/contexts/opening-stock';
+import { UnitProvider } from 'src/contexts/unit-context';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -40,6 +42,8 @@ const App = (props) => {
         <AuthProvider>
           <GroupProvider>
             <CategoryProvider>
+              <OpeningStockProvider>
+                <UnitProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <AuthConsumer>
@@ -51,6 +55,8 @@ const App = (props) => {
             </AuthConsumer>
             
           </ThemeProvider>
+          </UnitProvider>
+          </OpeningStockProvider>
           </CategoryProvider>
           </GroupProvider>
         </AuthProvider>

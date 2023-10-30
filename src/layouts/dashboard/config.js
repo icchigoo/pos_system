@@ -82,6 +82,15 @@ export const items = [
     )
   },
   {
+    title: 'Unit',
+    path: '/unit',
+    icon: (
+      <SvgIcon fontSize="small">
+        <LockClosedIcon />
+      </SvgIcon>
+    )
+  },
+  {
     title: 'Transaction',
     path: '/auth/register',
     icon: (
