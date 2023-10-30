@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useReducer, useRef } from "react";
 import PropTypes from "prop-types";
-import axios from "axios";
+import axios from "axios"; // Import axios for making HTTP requests
 import { base_url } from "src/utils/baseUrl";
 
 const HANDLERS = {
@@ -21,7 +21,8 @@ const handlers = {
 
     return {
       ...state,
-      ...(user
+      ...// if payload (user) is provided, then is authenticated
+      (user
         ? {
             isAuthenticated: true,
             isLoading: false,
@@ -42,13 +43,6 @@ const handlers = {
     };
   },
   [HANDLERS.SIGN_OUT]: (state) => {
-    try {
-      window.sessionStorage.removeItem("authenticated");
-      window.sessionStorage.removeItem("token");
-    } catch (err) {
-      console.error(err);
-    }
-
     return {
       ...state,
       isAuthenticated: false,
@@ -68,6 +62,7 @@ export const AuthProvider = (props) => {
   const initialized = useRef(false);
 
   const initialize = async () => {
+    // Prevent from calling twice in development mode with React.StrictMode enabled
     if (initialized.current) {
       return;
     }
@@ -101,9 +96,13 @@ export const AuthProvider = (props) => {
     }
   };
 
-  useEffect(() => {
-    initialize();
-  }, []);
+  useEffect(
+    () => {
+      initialize();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   const skip = () => {
     try {
@@ -123,88 +122,97 @@ export const AuthProvider = (props) => {
       type: HANDLERS.SIGN_IN,
       payload: user,
     });
-
-    // Simulate an authenticated request to a protected function
-    const authenticatedResponse = protectedFunction(user);
-    console.log("Authenticated request response:", authenticatedResponse);
   };
 
   const signIn = async (email, password) => {
     try {
-      // Simulate a login request (replace with actual API call)
-      const user = {
-        id: "5e86809283e28b96d2d38537",
-        name: "John Doe", // Modify with the user's name
-        email: email, // Use the provided email
-      };
-
-      // Save user data and authentication in session storage
+      const response = await axios.post(`${base_url}user/login`, {
+        email: email,
+        password: password,
+      });
+  
+      const user = response.data.user;
+      const token = response.data.token;
+  
       try {
+        window.sessionStorage.setItem("token", token);
         window.sessionStorage.setItem("authenticated", "true");
-        // You can save the user's name and email in session storage if needed
       } catch (err) {
         console.error(err);
       }
-
+  
       dispatch({
         type: HANDLERS.SIGN_IN,
         payload: user,
       });
-
-      // Simulate an authenticated request to a protected function
-      const authenticatedResponse = protectedFunction(user);
+  
+      // Use the authenticatedAxios instance to make authenticated requests
+      const authenticatedResponse = await authenticatedAxios.get(`${base_url}some/protected/endpoint`);
       console.log("Authenticated request response:", authenticatedResponse);
     } catch (error) {
       console.error("Login failed:", error);
     }
   };
+  
+  
 
   const signUp = async (firstname, lastname, email, mobile, password) => {
     try {
-      // Simulate a registration request (replace with actual API call)
-      const user = {
-        id: "5e86809283e28b96d2d38537",
-        name: `${firstname} ${lastname}`,
+      // Make an API call to register a new user
+      const response = await axios.post(`${base_url}user/register`, {
+        firstname: firstname,
+        lastname: lastname,
         email: email,
-      };
-
-      // Save user data and authentication in session storage
-      try {
-        window.sessionStorage.setItem("authenticated", "true");
-        // You can save the user's name and email in session storage if needed
-      } catch (err) {
-        console.error(err);
-      }
-
-      dispatch({
-        type: HANDLERS.SIGN_IN,
-        payload: user,
+        mobile: mobile,
+        password: password,
       });
 
-      // Simulate an authenticated request to a protected function
-      const authenticatedResponse = protectedFunction(user);
-      console.log("Authenticated request response:", authenticatedResponse);
+      // Handle the response from the server
+      if (response.data.message === "User created successfully") {
+        // User registration was successful
+        // You can add any additional logic here if needed
+        // Save user authentication state in session storage
+        try {
+          window.sessionStorage.setItem("authenticated", "true");
+        } catch (err) {
+          console.error(err);
+        }
+
+        // Dispatch the user data to the state
+        const user = {
+          id: response.data.userId, // Modify this based on your API response
+          // Other user data from the API response
+        };
+
+        dispatch({
+          type: HANDLERS.SIGN_IN,
+          payload: user,
+        });
+      } else {
+        // Handle registration error, e.g., display an error message
+        console.error("Registration failed:", response.data.message);
+      }
     } catch (error) {
+      // Handle network error or other issues with the registration API
       console.error("Registration failed:", error);
     }
   };
 
   const signOut = () => {
+
+    try {
+      window.sessionStorage.removeItem("token");
+      window.sessionStorage.removeItem("authenticated");
+    } catch (err) {
+      console.error(err);
+    }
+
     dispatch({
       type: HANDLERS.SIGN_OUT,
     });
-  };
+  
 
-  const protectedFunction = (user) => {
-    // Simulate a protected function that returns the user's name and email
-    return {
-      data: {
-        name: user.name,
-        email: user.email,
-      },
-    };
   };
-
   return (
     <AuthContext.Provider
       value={{
