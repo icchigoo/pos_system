@@ -64,6 +64,15 @@ export const items = [
     )
   },
   {
+    title: 'Category',
+    path: '/category',
+    icon: (
+      <SvgIcon fontSize="small">
+        <CogIcon />
+      </SvgIcon>
+    )
+  },
+  {
     title: 'Report',
     path: '/auth/login',
     icon: (

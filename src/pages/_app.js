@@ -10,6 +10,7 @@ import { createTheme } from 'src/theme';
 import { createEmotionCache } from 'src/utils/create-emotion-cache';
 import 'simplebar-react/dist/simplebar.min.css';
 import { GroupProvider } from 'src/contexts/group-context';
+import { CategoryProvider } from 'src/contexts/category-context';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -38,6 +39,7 @@ const App = (props) => {
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <AuthProvider>
           <GroupProvider>
+            <CategoryProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <AuthConsumer>
@@ -49,6 +51,7 @@ const App = (props) => {
             </AuthConsumer>
             
           </ThemeProvider>
+          </CategoryProvider>
           </GroupProvider>
         </AuthProvider>
       </LocalizationProvider>
