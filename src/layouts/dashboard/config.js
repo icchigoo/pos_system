@@ -73,8 +73,18 @@ export const items = [
     )
   },
   {
-    title: 'Report',
-    path: '/auth/login',
+    title: 'Product',
+    path: '/product',
+    icon: (
+      <SvgIcon fontSize="small">
+        <CogIcon />
+      </SvgIcon>
+    )
+  },
+
+  {
+    title: 'Tax',
+    path: '/tax',
     icon: (
       <SvgIcon fontSize="small">
         <LockClosedIcon />
@@ -90,15 +100,8 @@ export const items = [
       </SvgIcon>
     )
   },
-  {
-    title: 'Transaction',
-    path: '/auth/register',
-    icon: (
-      <SvgIcon fontSize="small">
-        <UserPlusIcon />
-      </SvgIcon>
-    )
-  },
+ 
+
 
   // {
   //   title: 'Error',

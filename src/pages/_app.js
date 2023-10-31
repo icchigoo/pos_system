@@ -13,6 +13,8 @@ import { GroupProvider } from 'src/contexts/group-context';
 import { CategoryProvider } from 'src/contexts/category-context';
 import { OpeningStockProvider } from 'src/contexts/opening-stock';
 import { UnitProvider } from 'src/contexts/unit-context';
+import { ProductProvider } from 'src/contexts/product-context';
+import { TaxProvider } from 'src/contexts/tax-context';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -44,6 +46,8 @@ const App = (props) => {
             <CategoryProvider>
               <OpeningStockProvider>
                 <UnitProvider>
+                  <ProductProvider>
+                    <TaxProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <AuthConsumer>
@@ -53,8 +57,10 @@ const App = (props) => {
                   : getLayout(<Component {...pageProps} />)
               }
             </AuthConsumer>
-            
           </ThemeProvider>
+          </TaxProvider>
+          </ProductProvider>
+
           </UnitProvider>
           </OpeningStockProvider>
           </CategoryProvider>

@@ -82,14 +82,6 @@ const CategoryPage = () => {
     return items.slice(startIndex, startIndex + rowsPerPage);
   };
 
-  const handlePageChange = useCallback((event, value) => {
-    setPage(value);
-  }, []);
-
-  const handleRowsPerPageChange = useCallback((event) => {
-    setRowsPerPage(event.target.value);
-  }, []);
-
   const handleSort = (property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -334,19 +326,19 @@ const CategoryPage = () => {
             />
           </Box>
           <Box mb={2}>
-          <TextField
-            select
-            label="Group"
-            fullWidth
-            value={editCategoryGroup}
-            onChange={(e) => setEditCategoryGroup(e.target.value)}
-          >
-            {groups.map((group) => (
-              <MenuItem key={group.group_id} value={group.group_id}>
-                {group.group_name}
-              </MenuItem>
-            ))}
-          </TextField>
+            <TextField
+              select
+              label="Group"
+              fullWidth
+              value={editCategoryGroup}
+              onChange={(e) => setEditCategoryGroup(e.target.value)}
+            >
+              {groups.map((group) => (
+                <MenuItem key={group.group_id} value={group.group_id}>
+                  {group.group_name}
+                </MenuItem>
+              ))}
+            </TextField>
           </Box>
           <TextField
             select
