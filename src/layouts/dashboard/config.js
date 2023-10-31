@@ -18,24 +18,8 @@ export const items = [
       </SvgIcon>
     )
   },
-  {
-    title: 'Customers',
-    path: '/customers',
-    icon: (
-      <SvgIcon fontSize="small">
-        <UsersIcon />
-      </SvgIcon>
-    )
-  },
-  {
-    title: 'Products',
-    path: '/companies',
-    icon: (
-      <SvgIcon fontSize="small">
-        <ShoppingBagIcon />
-      </SvgIcon>
-    )
-  },
+ 
+
   {
     title: 'Account',
     path: '/account',
@@ -55,14 +39,23 @@ export const items = [
     )
   },
   {
-    title: 'Settings',
-    path: '/settings',
+    title: 'Membership',
+    path: '/membership',
     icon: (
       <SvgIcon fontSize="small">
-        <CogIcon />
+        <UserIcon />
       </SvgIcon>
     )
-  },
+  }, 
+  // {
+  //   title: 'Settings',
+  //   path: '/settings',
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <CogIcon />
+  //     </SvgIcon>
+  //   )
+  // },
   {
     title: 'Category',
     path: '/category',
@@ -72,15 +65,15 @@ export const items = [
       </SvgIcon>
     )
   },
-  {
-    title: 'Product',
-    path: '/product',
-    icon: (
-      <SvgIcon fontSize="small">
-        <CogIcon />
-      </SvgIcon>
-    )
-  },
+  // {
+  //   title: 'Product',
+  //   path: '/product',
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <CogIcon />
+  //     </SvgIcon>
+  //   )
+  // },
 
   {
     title: 'Tax',
