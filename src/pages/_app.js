@@ -16,6 +16,7 @@ import { UnitProvider } from 'src/contexts/unit-context';
 import { ProductProvider } from 'src/contexts/product-context';
 import { TaxProvider } from 'src/contexts/tax-context';
 import { MembershipProvider } from 'src/contexts/membership';
+import { CompanyProvider } from 'src/contexts/company-context';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -50,6 +51,7 @@ const App = (props) => {
                   <ProductProvider>
                     <TaxProvider>
                       <MembershipProvider>
+                        <CompanyProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <AuthConsumer>
@@ -60,6 +62,7 @@ const App = (props) => {
               }
             </AuthConsumer>
           </ThemeProvider>
+          </CompanyProvider>
           </MembershipProvider>
           </TaxProvider>
           </ProductProvider>
