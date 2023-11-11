@@ -74,15 +74,15 @@ export const items = [
       </SvgIcon>
     )
   },
-  // {
-  //   title: 'Product',
-  //   path: '/product',
-  //   icon: (
-  //     <SvgIcon fontSize="small">
-  //       <CogIcon />
-  //     </SvgIcon>
-  //   )
-  // },
+  {
+    title: 'Product',
+    path: '/product',
+    icon: (
+      <SvgIcon fontSize="small">
+        <CogIcon />
+      </SvgIcon>
+    )
+  },
 
   {
     title: 'Tax',
