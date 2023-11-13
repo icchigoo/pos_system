@@ -56,15 +56,15 @@ export const items = [
       </SvgIcon>
     )
   }, 
-  // {
-  //   title: 'Settings',
-  //   path: '/settings',
-  //   icon: (
-  //     <SvgIcon fontSize="small">
-  //       <CogIcon />
-  //     </SvgIcon>
-  //   )
-  // },
+  {
+    title: 'Opening',
+    path: '/opening',
+    icon: (
+      <SvgIcon fontSize="small">
+        <CogIcon />
+      </SvgIcon>
+    )
+  },
   {
     title: 'Category',
     path: '/category',
@@ -77,6 +77,15 @@ export const items = [
   {
     title: 'Product',
     path: '/product',
+    icon: (
+      <SvgIcon fontSize="small">
+        <CogIcon />
+      </SvgIcon>
+    )
+  },
+  {
+    title: 'Stock Adjustment',
+    path: '/stock-adjustment',
     icon: (
       <SvgIcon fontSize="small">
         <CogIcon />

@@ -3,18 +3,18 @@ import authenticatedAxios from "../utils/axiosInstance";
 import { useAuthContext } from "./auth-context";
 import { base_url } from "../utils/baseUrl";
 
-const OpeningStockContext = createContext();
+const StockAdjustmentContext = createContext();
 
-export const useOpeningStockContext = () => useContext(OpeningStockContext);
+export const useStockAdjustmentContext = () => useContext(StockAdjustmentContext);
 
-export const OpeningStockProvider = ({ children }) => {
+export const StockAdjustmentProvider = ({ children }) => {
   const { user } = useAuthContext();
 
-  const createOpeningStock = async (openingStockData) => {
+  const createStockAdjustment = async (stockAdjustmentData) => {
     try {
       const response = await authenticatedAxios.post(
-        `${base_url}opening`,
-        openingStockData,
+        `${base_url}stock`,
+        stockAdjustmentData,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -27,19 +27,19 @@ export const OpeningStockProvider = ({ children }) => {
     }
   };
 
-  const fetchOpeningStockEntries = async () => {
+  const fetchStockAdjustments = async () => {
     try {
-      const response = await authenticatedAxios.get(`${base_url}opening`);
-      return response.data.openingStockEntries;
+      const response = await authenticatedAxios.get(`${base_url}stock`);
+      return response.data.stock_adjustments;
     } catch (error) {
       throw new Error(error.response.data.message);
     }
   };
 
-  const deleteOpeningStock = async (openingStockId) => {
+  const deleteStockAdjustment = async (stockAdjustmentId) => {
     try {
       const response = await authenticatedAxios.delete(
-        `${base_url}opening/${openingStockId}`,
+        `${base_url}stock/${stockAdjustmentId}`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -52,11 +52,11 @@ export const OpeningStockProvider = ({ children }) => {
     }
   };
 
-  const editOpeningStock = async (openingStockId, updatedOpeningStockData) => {
+  const editStockAdjustment = async (stockAdjustmentId, updatedStockAdjustmentData) => {
     try {
       const response = await authenticatedAxios.put(
-        `${base_url}opening/${openingStockId}`,
-        updatedOpeningStockData,
+        `${base_url}stock/${stockAdjustmentId}`,
+        updatedStockAdjustmentData,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -70,15 +70,15 @@ export const OpeningStockProvider = ({ children }) => {
   };
 
   return (
-    <OpeningStockContext.Provider
+    <StockAdjustmentContext.Provider
       value={{
-        createOpeningStock,
-        fetchOpeningStockEntries,
-        deleteOpeningStock,
-        editOpeningStock,
+        createStockAdjustment,
+        fetchStockAdjustments,
+        deleteStockAdjustment,
+        editStockAdjustment,
       }}
     >
       {children}
-    </OpeningStockContext.Provider>
+    </StockAdjustmentContext.Provider>
   );
 };
