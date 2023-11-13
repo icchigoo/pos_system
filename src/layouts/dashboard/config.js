@@ -92,6 +92,15 @@ export const items = [
       </SvgIcon>
     )
   },
+  {
+    title: 'Supplier',
+    path: '/supplier',
+    icon: (
+      <SvgIcon fontSize="small">
+        <CogIcon />
+      </SvgIcon>
+    )
+  },
 
   {
     title: 'Tax',
