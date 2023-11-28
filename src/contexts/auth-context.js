@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useReducer, useRef } from "react";
 import PropTypes from "prop-types";
-import axios from "axios"; // Import axios for making HTTP requests
+import axios from "axios";
 import { base_url } from "src/utils/baseUrl";
 
 const HANDLERS = {
@@ -21,8 +21,7 @@ const handlers = {
 
     return {
       ...state,
-      ...// if payload (user) is provided, then is authenticated
-      (user
+      ...(user
         ? {
             isAuthenticated: true,
             isLoading: false,
@@ -62,7 +61,6 @@ export const AuthProvider = (props) => {
   const initialized = useRef(false);
 
   const initialize = async () => {
-    // Prevent from calling twice in development mode with React.StrictMode enabled
     if (initialized.current) {
       return;
     }
@@ -78,13 +76,7 @@ export const AuthProvider = (props) => {
     }
 
     if (isAuthenticated) {
-      const user = {
-        id: "5e86809283e28b96d2d38537",
-        avatar: "/assets/avatars/avatar-anika-visser.png",
-        name: "Anika Visser",
-        email: "anika.visser@devias.io",
-      };
-
+      const user = getUserFromLocalStorage(); // Assuming you have a function to get user details from local storage
       dispatch({
         type: HANDLERS.INITIALIZE,
         payload: user,
@@ -96,13 +88,18 @@ export const AuthProvider = (props) => {
     }
   };
 
-  useEffect(
-    () => {
-      initialize();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
+  useEffect(() => {
+    initialize();
+  }, []);
+
+  const getUserFromLocalStorage = () => {
+    const userString = window.localStorage.getItem("user");
+    return userString ? JSON.parse(userString) : null;
+  };
+
+  const setUserInLocalStorage = (user) => {
+    window.localStorage.setItem("user", JSON.stringify(user));
+  };
 
   const skip = () => {
     try {
@@ -122,6 +119,8 @@ export const AuthProvider = (props) => {
       type: HANDLERS.SIGN_IN,
       payload: user,
     });
+
+    setUserInLocalStorage(user);
   };
 
   const signIn = async (email, password) => {
@@ -130,35 +129,33 @@ export const AuthProvider = (props) => {
         email: email,
         password: password,
       });
-  
+
       const user = response.data.user;
       const token = response.data.token;
-  
+
       try {
         window.sessionStorage.setItem("token", token);
         window.sessionStorage.setItem("authenticated", "true");
       } catch (err) {
         console.error(err);
       }
-  
+
       dispatch({
         type: HANDLERS.SIGN_IN,
         payload: user,
       });
-  
-      // Use the authenticatedAxios instance to make authenticated requests
+
+      setUserInLocalStorage(user);
+
       const authenticatedResponse = await authenticatedAxios.get(`${base_url}some/protected/endpoint`);
       console.log("Authenticated request response:", authenticatedResponse);
     } catch (error) {
       console.error("Login failed:", error);
     }
   };
-  
-  
 
   const signUp = async (firstname, lastname, email, mobile, password) => {
     try {
-      // Make an API call to register a new user
       const response = await axios.post(`${base_url}user/register`, {
         firstname: firstname,
         lastname: lastname,
@@ -167,20 +164,15 @@ export const AuthProvider = (props) => {
         password: password,
       });
 
-      // Handle the response from the server
       if (response.data.message === "User created successfully") {
-        // User registration was successful
-        // You can add any additional logic here if needed
-        // Save user authentication state in session storage
         try {
           window.sessionStorage.setItem("authenticated", "true");
         } catch (err) {
           console.error(err);
         }
 
-        // Dispatch the user data to the state
         const user = {
-          id: response.data.userId, // Modify this based on your API response
+          id: response.data.userId,
           // Other user data from the API response
         };
 
@@ -188,21 +180,21 @@ export const AuthProvider = (props) => {
           type: HANDLERS.SIGN_IN,
           payload: user,
         });
+
+        setUserInLocalStorage(user);
       } else {
-        // Handle registration error, e.g., display an error message
         console.error("Registration failed:", response.data.message);
       }
     } catch (error) {
-      // Handle network error or other issues with the registration API
       console.error("Registration failed:", error);
     }
   };
 
   const signOut = () => {
-
     try {
       window.sessionStorage.removeItem("token");
       window.sessionStorage.removeItem("authenticated");
+      window.localStorage.removeItem("user");
     } catch (err) {
       console.error(err);
     }
@@ -210,9 +202,8 @@ export const AuthProvider = (props) => {
     dispatch({
       type: HANDLERS.SIGN_OUT,
     });
-  
-
   };
+
   return (
     <AuthContext.Provider
       value={{

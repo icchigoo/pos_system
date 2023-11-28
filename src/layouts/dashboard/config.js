@@ -38,15 +38,15 @@ export const items = [
       </SvgIcon>
     )
   },
-  {
-    title: 'Membership',
-    path: '/membership',
-    icon: (
-      <SvgIcon fontSize="small">
-        <UserIcon />
-      </SvgIcon>
-    )
-  }, 
+  // {
+  //   title: 'Membership',
+  //   path: '/membership',
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <UserIcon />
+  //     </SvgIcon>
+  //   )
+  // }, 
   {
     title: 'Company',
     path: '/company',
@@ -56,15 +56,15 @@ export const items = [
       </SvgIcon>
     )
   }, 
-  {
-    title: 'Opening',
-    path: '/opening',
-    icon: (
-      <SvgIcon fontSize="small">
-        <CogIcon />
-      </SvgIcon>
-    )
-  },
+  // {
+  //   title: 'Opening',
+  //   path: '/opening',
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <CogIcon />
+  //     </SvgIcon>
+  //   )
+  // },
   {
     title: 'Category',
     path: '/category',
@@ -83,24 +83,24 @@ export const items = [
       </SvgIcon>
     )
   },
-  {
-    title: 'Stock Adjustment',
-    path: '/stock-adjustment',
-    icon: (
-      <SvgIcon fontSize="small">
-        <CogIcon />
-      </SvgIcon>
-    )
-  },
-  {
-    title: 'Supplier',
-    path: '/supplier',
-    icon: (
-      <SvgIcon fontSize="small">
-        <CogIcon />
-      </SvgIcon>
-    )
-  },
+  // {
+  //   title: 'Stock Adjustment',
+  //   path: '/stock-adjustment',
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <CogIcon />
+  //     </SvgIcon>
+  //   )
+  // },
+  // {
+  //   title: 'Supplier',
+  //   path: '/supplier',
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <CogIcon />
+  //     </SvgIcon>
+  //   )
+  // },
 
   {
     title: 'Tax',
