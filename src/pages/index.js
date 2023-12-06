@@ -17,7 +17,7 @@ const Page = () => (
   <>
     <Head>
       <title>
-        Overview | Pos System
+        Overview | Devias Kit
       </title>
     </Head>
     <Box
@@ -41,7 +41,7 @@ const Page = () => (
               difference={12}
               positive
               sx={{ height: '100%' }}
-              value="RS 24k"
+              value="$24k"
             />
           </Grid>
           <Grid
@@ -73,7 +73,7 @@ const Page = () => (
           >
             <OverviewTotalProfit
               sx={{ height: '100%' }}
-              value="RS 15k"
+              value="$15k"
             />
           </Grid>
           <Grid
@@ -100,8 +100,8 @@ const Page = () => (
             lg={4}
           >
             <OverviewTraffic
-              chartSeries={[50, 15, 22, 13]}
-              labels={['Cuisine', 'Fashion', 'Toys', 'Beauty']}
+              chartSeries={[63, 15, 22]}
+              labels={['Desktop', 'Tablet', 'Phone']}
               sx={{ height: '100%' }}
             />
           </Grid>

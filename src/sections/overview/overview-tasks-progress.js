@@ -29,7 +29,7 @@ export const OverviewTasksProgress = (props) => {
               gutterBottom
               variant="overline"
             >
-           Sold ratio
+              Task Progress
             </Typography>
             <Typography variant="h4">
               {value}%

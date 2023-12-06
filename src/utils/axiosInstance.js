@@ -1,11 +1,16 @@
 import axios from "axios";
 
+
 const authenticatedAxios = axios.create();
 
-// Add an interceptor to the authenticatedAxios instance to automatically include the token in the request headers
 authenticatedAxios.interceptors.request.use(
   (config) => {
-    const token = window.sessionStorage.getItem("token");
+    const user = JSON.parse(window.localStorage.getItem("user"));
+    console.log("User in axios instance interceptor:", user);
+
+    const token = user ? user.token : null;
+    console.log("Token in axios instance interceptor:", token);
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

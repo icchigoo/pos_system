@@ -1,46 +1,51 @@
+// Import necessary dependencies and components
 import Head from 'next/head';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router'; // Change from 'next/navigation' to 'next/router'
+import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Box, Button, Link, Stack, TextField, Typography } from '@mui/material';
-import { useAuth } from 'src/hooks/use-auth';
-import { Layout as AuthLayout } from 'src/layouts/auth/layout';
 
-const Page = () => {
+import { Layout as AuthLayout } from 'src/layouts/auth/layout';
+import { useAuthContext } from 'src/contexts/AuthContext';
+
+const RegisterPage = () => {
   const router = useRouter();
-  const auth = useAuth();
+  const auth = useAuthContext();
+
   const formik = useFormik({
     initialValues: {
-      firstName: '',
-      lastName: '',
+      firstname: '',
+      lastname: '',
       email: '',
-      password: '',
       mobile: '',
+      address: '',
+      password: '',
+      submit: null,
     },
     validationSchema: Yup.object({
-      firstName: Yup.string().max(255).required('First Name is required'),
-      lastName: Yup.string().max(255).required('Last Name is required'),
+      firstname: Yup.string().max(255).required('First Name is required'),
+      lastname: Yup.string().max(255).required('Last Name is required'),
       email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+      mobile: Yup.string().max(15).required('Mobile is required'),
+      address: Yup.string().max(255).required('Address is required'),
       password: Yup.string().max(255).required('Password is required'),
-      mobile: Yup.string().max(255).required('Mobile is required'),
     }),
     onSubmit: async (values, helpers) => {
       try {
-        // Call the auth.signUp function with the updated field names
-        const success = await auth.signUp(values.firstName, values.lastName, values.email, values.password, values.mobile);
+        await auth.createUser({
+          firstname: values.firstname,
+          lastname: values.lastname,
+          email: values.email,
+          mobile: values.mobile,
+          address: values.address,
+          password: values.password,
+        });
 
-        if (success) {
-          // Registration was successful, navigate to the next page
-          router.push('/');
-        } else {
-          // Handle registration failure
-          helpers.setStatus({ success: false });
-          helpers.setSubmitting(false);
-        }
+        router.push('/auth/login');
       } catch (err) {
-        // Handle other errors, e.g., network error
         helpers.setStatus({ success: false });
+        helpers.setErrors({ submit: err.message });
         helpers.setSubmitting(false);
       }
     },
@@ -49,7 +54,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Register | Pos System</title>
+        <title>Register | Your App Name</title>
       </Head>
       <Box
         sx={{
@@ -71,8 +76,7 @@ const Page = () => {
             <Stack spacing={1} sx={{ mb: 3 }}>
               <Typography variant="h4">Register</Typography>
               <Typography color="text.secondary" variant="body2">
-                Already have an account?
-                &nbsp;
+                Already have an account?{' '}
                 <Link
                   component={NextLink}
                   href="/auth/login"
@@ -86,24 +90,24 @@ const Page = () => {
             <form noValidate onSubmit={formik.handleSubmit}>
               <Stack spacing={3}>
                 <TextField
-                  error={!!(formik.touched.firstName && formik.errors.firstName)}
+                  error={!!(formik.touched.firstname && formik.errors.firstname)}
                   fullWidth
-                  helperText={formik.touched.firstName && formik.errors.firstName}
+                  helperText={formik.touched.firstname && formik.errors.firstname}
                   label="First Name"
-                  name="firstName"
+                  name="firstname"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
-                  value={formik.values.firstName}
+                  value={formik.values.firstname}
                 />
                 <TextField
-                  error={!!(formik.touched.lastName && formik.errors.lastName)}
+                  error={!!(formik.touched.lastname && formik.errors.lastname)}
                   fullWidth
-                  helperText={formik.touched.lastName && formik.errors.lastName}
+                  helperText={formik.touched.lastname && formik.errors.lastname}
                   label="Last Name"
-                  name="lastName"
+                  name="lastname"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
-                  value={formik.values.lastName}
+                  value={formik.values.lastname}
                 />
                 <TextField
                   error={!!(formik.touched.email && formik.errors.email)}
@@ -117,6 +121,26 @@ const Page = () => {
                   value={formik.values.email}
                 />
                 <TextField
+                  error={!!(formik.touched.mobile && formik.errors.mobile)}
+                  fullWidth
+                  helperText={formik.touched.mobile && formik.errors.mobile}
+                  label="Mobile"
+                  name="mobile"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values.mobile}
+                />
+                <TextField
+                  error={!!(formik.touched.address && formik.errors.address)}
+                  fullWidth
+                  helperText={formik.touched.address && formik.errors.address}
+                  label="Address"
+                  name="address"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values.address}
+                />
+                <TextField
                   error={!!(formik.touched.password && formik.errors.password)}
                   fullWidth
                   helperText={formik.touched.password && formik.errors.password}
@@ -126,16 +150,6 @@ const Page = () => {
                   onChange={formik.handleChange}
                   type="password"
                   value={formik.values.password}
-                />
-                <TextField
-                  error={!!(formik.touched.mobile && formik.errors.mobile)}
-                  fullWidth
-                  helperText={formik.touched.mobile && formik.errors.mobile}
-                  label="Mobile"
-                  name="mobile"
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
-                  value={formik.values.mobile}
                 />
               </Stack>
               {formik.errors.submit && (
@@ -154,10 +168,6 @@ const Page = () => {
   );
 };
 
-Page.getLayout = (page) => (
-  <AuthLayout>
-    {page}
-  </AuthLayout>
-);
+RegisterPage.getLayout = (page) => <AuthLayout>{page}</AuthLayout>;
 
-export default Page;
+export default RegisterPage;

@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from "react";
 import authenticatedAxios from "../utils/axiosInstance";
-import { useAuthContext } from "./auth-context";
+import { useAuthContext } from "./AuthContext";
 import { base_url } from "../utils/baseUrl";
 
 const ProductContext = createContext();

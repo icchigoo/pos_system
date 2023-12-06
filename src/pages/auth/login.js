@@ -1,28 +1,25 @@
-import { useCallback, useState } from 'react';
+import React from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
-  Alert,
   Box,
   Button,
   FormHelperText,
   Link,
   Stack,
-  Tab,
-  Tabs,
   TextField,
   Typography
 } from '@mui/material';
-import { useAuth } from 'src/hooks/use-auth';
 import { Layout as AuthLayout } from 'src/layouts/auth/layout';
+import { useAuthContext } from 'src/contexts/AuthContext';
 
-const Page = () => {
+const LoginPage = () => {
   const router = useRouter();
-  const auth = useAuth();
-  const [method, setMethod] = useState('email');
+  const auth = useAuthContext(); // Update with the correct hook
+
   const formik = useFormik({
     initialValues: {
       email: 'demo@devias.io',
@@ -30,19 +27,25 @@ const Page = () => {
       submit: null
     },
     validationSchema: Yup.object({
-      email: Yup
-        .string()
+      email: Yup.string()
         .email('Must be a valid email')
         .max(255)
         .required('Email is required'),
-      password: Yup
-        .string()
+      password: Yup.string()
         .max(255)
         .required('Password is required')
     }),
     onSubmit: async (values, helpers) => {
       try {
-        await auth.signIn(values.email, values.password);
+        const userData = {
+          email: values.email,
+          password: values.password,
+        };
+
+        // Call your login function from the auth context
+        await auth.login(userData);
+
+        // Navigate to the desired page after successful login
         router.push('/');
       } catch (err) {
         helpers.setStatus({ success: false });
@@ -52,27 +55,12 @@ const Page = () => {
     }
   });
 
-  const handleMethodChange = useCallback(
-    (event, value) => {
-      setMethod(value);
-    },
-    []
-  );
-
-  const handleSkip = useCallback(
-    () => {
-      auth.skip();
-      router.push('/');
-    },
-    [auth, router]
-  );
+  
 
   return (
     <>
       <Head>
-        <title>
-          Login | Pos System
-        </title>
+        <title>Login | Devias Kit</title>
       </Head>
       <Box
         sx={{
@@ -115,102 +103,57 @@ const Page = () => {
                 </Link>
               </Typography>
             </Stack>
-            <Tabs
-              onChange={handleMethodChange}
-              sx={{ mb: 3 }}
-              value={method}
+            <form
+              noValidate
+              onSubmit={formik.handleSubmit}
             >
-              <Tab
-                label="Email"
-                value="email"
-              />
-              <Tab
-                label="Phone Number"
-                value="phoneNumber"
-              />
-            </Tabs>
-            {method === 'email' && (
-              <form
-                noValidate
-                onSubmit={formik.handleSubmit}
-              >
-                <Stack spacing={3}>
-                  <TextField
-                    error={!!(formik.touched.email && formik.errors.email)}
-                    fullWidth
-                    helperText={formik.touched.email && formik.errors.email}
-                    label="Email Address"
-                    name="email"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    type="email"
-                    value={formik.values.email}
-                  />
-                  <TextField
-                    error={!!(formik.touched.password && formik.errors.password)}
-                    fullWidth
-                    helperText={formik.touched.password && formik.errors.password}
-                    label="Password"
-                    name="password"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    type="password"
-                    value={formik.values.password}
-                  />
-                </Stack>
-                <FormHelperText sx={{ mt: 1 }}>
-                  Optionally you can skip.
-                </FormHelperText>
-                {formik.errors.submit && (
-                  <Typography
-                    color="error"
-                    sx={{ mt: 3 }}
-                    variant="body2"
-                  >
-                    {formik.errors.submit}
-                  </Typography>
-                )}
-                <Button
+              <Stack spacing={3}>
+                <TextField
+                  error={!!(formik.touched.email && formik.errors.email)}
                   fullWidth
-                  size="large"
-                  sx={{ mt: 3 }}
-                  type="submit"
-                  variant="contained"
-                >
-                  Continue
-                </Button>
-                <Button
+                  helperText={formik.touched.email && formik.errors.email}
+                  label="Email Address"
+                  name="email"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  type="email"
+                  value={formik.values.email}
+                />
+                <TextField
+                  error={!!(formik.touched.password && formik.errors.password)}
                   fullWidth
-                  size="large"
-                  sx={{ mt: 3 }}
-                  onClick={handleSkip}
-                >
-                  Skip authentication
-                </Button>
-                <Alert
-                  color="primary"
-                  severity="info"
-                  sx={{ mt: 3 }}
-                >
-                  <div>
-                    You can use <b>demo@devias.io</b> and password <b>Password123!</b>
-                  </div>
-                </Alert>
-              </form>
-            )}
-            {method === 'phoneNumber' && (
-              <div>
+                  helperText={formik.touched.password && formik.errors.password}
+                  label="Password"
+                  name="password"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  type="password"
+                  value={formik.values.password}
+                />
+              </Stack>
+              <FormHelperText sx={{ mt: 1 }}>
+                {/* Optionally you can skip. Removed skip button */}
+              </FormHelperText>
+              {formik.errors.submit && (
                 <Typography
-                  sx={{ mb: 1 }}
-                  variant="h6"
+                  color="error"
+                  sx={{ mt: 3 }}
+                  variant="body2"
                 >
-                  Not available in the demo
+                  {formik.errors.submit}
                 </Typography>
-                <Typography color="text.secondary">
-                  To prevent unnecessary costs we disabled this feature in the demo.
-                </Typography>
-              </div>
-            )}
+              )}
+              <Button
+                fullWidth
+                size="large"
+                sx={{ mt: 3 }}
+                type="submit"
+                variant="contained"
+              >
+                Continue
+              </Button>
+              {/* Removed skip button */}
+            </form>
           </div>
         </Box>
       </Box>
@@ -218,10 +161,10 @@ const Page = () => {
   );
 };
 
-Page.getLayout = (page) => (
+LoginPage.getLayout = (page) => (
   <AuthLayout>
     {page}
   </AuthLayout>
 );
 
-export default Page;
+export default LoginPage;

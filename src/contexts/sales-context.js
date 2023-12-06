@@ -3,16 +3,16 @@ import authenticatedAxios from "../utils/axiosInstance";
 import { useAuthContext } from "./AuthContext";
 import { base_url } from "../utils/baseUrl";
 
-const TaxContext = createContext();
+const SalesContext = createContext();
 
-export const useTaxContext = () => useContext(TaxContext);
+export const useSalesContext = () => useContext(SalesContext);
 
-export const TaxProvider = ({ children }) => {
+export const SalesProvider = ({ children }) => {
   const { user } = useAuthContext();
 
-  const createTax = async (taxData) => {
+  const createSale = async (saleData) => {
     try {
-      const response = await authenticatedAxios.post(`${base_url}tax`, taxData, {
+      const response = await authenticatedAxios.post(`${base_url}sales`, saleData, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -23,18 +23,18 @@ export const TaxProvider = ({ children }) => {
     }
   };
 
-  const fetchTaxes = async () => {
+  const fetchSales = async () => {
     try {
-      const response = await authenticatedAxios.get(`${base_url}tax`);
-      return response.data.taxes;
+      const response = await authenticatedAxios.get(`${base_url}sales`);
+      return response.data.sales;
     } catch (error) {
-      throw  Error(error.response.data.message);
+      throw new Error(error.response.data.message);
     }
   };
 
-  const deleteTax = async (taxId) => {
+  const deleteSale = async (saleId) => {
     try {
-      const response = await authenticatedAxios.delete(`${base_url}tax/${taxId}`, {
+      const response = await authenticatedAxios.delete(`${base_url}sales/${saleId}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -45,9 +45,9 @@ export const TaxProvider = ({ children }) => {
     }
   };
 
-  const editTax = async (taxId, updatedTaxData) => {
+  const editSale = async (saleId, updatedSaleData) => {
     try {
-      const response = await authenticatedAxios.put(`${base_url}tax/${taxId}`, updatedTaxData, {
+      const response = await authenticatedAxios.put(`${base_url}sales/${saleId}`, updatedSaleData, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -59,8 +59,8 @@ export const TaxProvider = ({ children }) => {
   };
 
   return (
-    <TaxContext.Provider value={{ createTax, fetchTaxes, deleteTax, editTax }}>
+    <SalesContext.Provider value={{ createSale, fetchSales, deleteSale, editSale }}>
       {children}
-    </TaxContext.Provider>
+    </SalesContext.Provider>
   );
 };

@@ -7,7 +7,7 @@ const Page = () => (
   <>
     <Head>
       <title>
-        404 | Pos System
+        404 | Devias Kit
       </title>
     </Head>
     <Box

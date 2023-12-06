@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from "react";
 import authenticatedAxios from "../utils/axiosInstance";
-import { useAuthContext } from "./auth-context";
+import { useAuthContext } from "./AuthContext";
 import { base_url } from "../utils/baseUrl";
 
 const GroupContext = createContext();
@@ -12,11 +12,7 @@ export const GroupProvider = ({ children }) => {
 
   const createGroup = async (groupData) => {
     try {
-      const response = await authenticatedAxios.post(`${base_url}group`, groupData, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+      const response = await authenticatedAxios.post(`${base_url}group`, groupData, {});
       return response.data;
     } catch (error) {
       throw new Error(error.response.data.message);
@@ -34,11 +30,7 @@ export const GroupProvider = ({ children }) => {
 
   const deleteGroup = async (groupId) => {
     try {
-      const response = await authenticatedAxios.delete(`${base_url}group/${groupId}`, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+      const response = await authenticatedAxios.delete(`${base_url}group/${groupId}`, {});
       return response.data;
     } catch (error) {
       throw new Error(error.response.data.message);
@@ -47,11 +39,11 @@ export const GroupProvider = ({ children }) => {
 
   const editGroup = async (groupId, updatedGroupData) => {
     try {
-      const response = await authenticatedAxios.put(`${base_url}group/${groupId}`, updatedGroupData, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+      const response = await authenticatedAxios.put(
+        `${base_url}group/${groupId}`,
+        updatedGroupData,
+        {}
+      );
       return response.data;
     } catch (error) {
       throw new Error(error.response.data.message);
