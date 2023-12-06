@@ -9,6 +9,7 @@ import {
   Button,
   Grid,
   MenuItem,
+  IconButton,
 } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import Bill from "./bill";
@@ -192,8 +193,17 @@ const SalesPage = () => {
             </Stack>
 
             {saleProducts.map((product, index) => (
-              <Grid container spacing={2} key={index}>
-                <Grid item xs={6}>
+              <Grid
+                container
+                spacing={2}
+                key={index}
+                style={{
+                  background: index % 2 === 0 ? "#f5f5f5" : "white",
+                  padding: "10px",
+                  borderRadius: "5px",
+                }}
+              >
+                <Grid item xs={3}>
                   <TextField
                     select
                     label="Product"
@@ -209,7 +219,7 @@ const SalesPage = () => {
                   </TextField>
                 </Grid>
 
-                <Grid item xs={6}>
+                <Grid item xs={2}>
                   <TextField
                     label="Price"
                     fullWidth
@@ -218,7 +228,8 @@ const SalesPage = () => {
                     onChange={(e) => handleProductChange(index, "price", e.target.value)}
                   />
                 </Grid>
-                <Grid item xs={6}>
+
+                <Grid item xs={2}>
                   <TextField
                     label="Quantity"
                     fullWidth
@@ -227,7 +238,8 @@ const SalesPage = () => {
                     onChange={(e) => handleProductChange(index, "qty", e.target.value)}
                   />
                 </Grid>
-                <Grid item xs={6}>
+
+                <Grid item xs={2}>
                   <TextField
                     label="Total"
                     fullWidth
@@ -237,30 +249,31 @@ const SalesPage = () => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={6}>
-                  <Button
-                    variant="outlined"
+
+                <Grid item xs={1}>
+                  <IconButton
                     color="secondary"
                     onClick={() => handleRemoveProduct(index)}
-                    startIcon={<DeleteIcon />}
+                    aria-label="remove"
                   >
-                    Remove
-                  </Button>
+                    <DeleteIcon />
+                  </IconButton>
                 </Grid>
-                <Grid item xs={6}>
-                  <Button
-                    variant="outlined"
-                    onClick={handleAddProduct}
-                    startIcon={<AddIcon />}
-                  >
-                    Add
-                  </Button>
+
+                <Grid item xs={2}>
+                  <IconButton onClick={handleAddProduct} aria-label="add">
+                    <AddIcon />
+                  </IconButton>
                 </Grid>
               </Grid>
             ))}
 
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
+            <Grid
+              container
+              spacing={2}
+              style={{ background: "#f5f5f5", padding: "10px", borderRadius: "5px" }}
+            >
+              <Grid item xs={3}>
                 <TextField
                   label="Sales Date"
                   fullWidth
@@ -270,7 +283,7 @@ const SalesPage = () => {
                 />
               </Grid>
 
-              <Grid item xs={6}>
+              <Grid item xs={3}>
                 <TextField
                   label="Payment Method"
                   fullWidth
@@ -279,7 +292,7 @@ const SalesPage = () => {
                 />
               </Grid>
 
-              <Grid item xs={6}>
+              <Grid item xs={2}>
                 <TextField
                   select
                   label="Tax"
@@ -288,19 +301,15 @@ const SalesPage = () => {
                   value={newSaleTax}
                   onChange={(e) => setNewSaleTax(e.target.value)}
                 >
-                  {taxes.map(
-                    (
-                      taxOption // Change taxOptions to taxes
-                    ) => (
-                      <MenuItem key={taxOption.tax_id} value={taxOption.tax_id}>
-                        {taxOption.tax_name}
-                      </MenuItem>
-                    )
-                  )}
+                  {taxes.map((taxOption) => (
+                    <MenuItem key={taxOption.tax_id} value={taxOption.tax_id}>
+                      {taxOption.tax_name}
+                    </MenuItem>
+                  ))}
                 </TextField>
               </Grid>
 
-              <Grid item xs={6}>
+              <Grid item xs={2}>
                 <TextField
                   label="Discount Percentage"
                   fullWidth
@@ -310,7 +319,7 @@ const SalesPage = () => {
                 />
               </Grid>
 
-              <Grid item xs={6}>
+              <Grid item xs={2}>
                 <TextField
                   label="Grand Total"
                   fullWidth
@@ -321,13 +330,14 @@ const SalesPage = () => {
                 />
               </Grid>
             </Grid>
-            <Grid container spacing={2} alignItems="center"> {/* Added alignItems */}
+
+            <Grid container spacing={2} alignItems="center">
+              {" "}
               <Grid item xs={6}>
                 <Button variant="contained" onClick={handleCreateSale}>
                   Create
                 </Button>
               </Grid>
-          
             </Grid>
 
             {showBill && <Bill saleData={saleData} products={products} taxes={taxes} />}
