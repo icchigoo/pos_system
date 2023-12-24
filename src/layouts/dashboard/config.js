@@ -119,4 +119,13 @@ export const items = [
       </SvgIcon>
     ),
   },
+  {
+    title: "Bill Page",
+    path: "/billpage",
+    icon: (
+      <SvgIcon fontSize="small">
+        <LockClosedIcon />
+      </SvgIcon>
+    ),
+  },
 ];

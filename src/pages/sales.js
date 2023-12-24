@@ -183,7 +183,7 @@ const SalesPage = () => {
       <Head>
         <title>Sales | Your App Name</title>
       </Head>
-      <Box component="main" sx={{ flexGrow: 1, py: 8 }}>
+      <Box component="main" sx={{ flexGrow: 1, py: 8, background: "inherit" }}>
         <Container maxWidth="xl">
           <Stack spacing={3}>
             <Stack direction="row" justifyContent="space-between" spacing={4}>
@@ -198,7 +198,6 @@ const SalesPage = () => {
                 spacing={2}
                 key={index}
                 style={{
-                  background: index % 2 === 0 ? "#f5f5f5" : "white",
                   padding: "10px",
                   borderRadius: "5px",
                 }}
@@ -261,18 +260,14 @@ const SalesPage = () => {
                 </Grid>
 
                 <Grid item xs={2}>
-                  <IconButton onClick={handleAddProduct} aria-label="add">
-                    <AddIcon />
-                  </IconButton>
+                  <Button onClick={handleAddProduct} variant="contained">
+                    Add
+                  </Button>
                 </Grid>
               </Grid>
             ))}
 
-            <Grid
-              container
-              spacing={2}
-              style={{ background: "#f5f5f5", padding: "10px", borderRadius: "5px" }}
-            >
+            <Grid container spacing={2}>
               <Grid item xs={3}>
                 <TextField
                   label="Sales Date"
